@@ -132,45 +132,23 @@ namespace lab1_v2
         }
         private void utworzHistogramWiatr()
         {
+            void inkrementujTablice(double wartoscPrzelicznika, int indexTablicy)
+            {
+                if(wartoscPrzelicznika >= indexTablicy && wartoscPrzelicznika < indexTablicy + 1)
+                {
+                    tabHistogramWiatr[indexTablicy] += 1;
+                }
+            }
             double suma = 0;
             double vPrzelicz = 0; //zmienna pomocnicza do przeliczania wartości v waitru
 
             for (int i = 0; i < tabWiatr.Length; i++)
             {
                 vPrzelicz = predWiatruWysokosc(tabWiatr[i], 135, 0.2); //wywowłanie funkcji uwzgledniajacej pionowy rpofil waitru
-
-                if ((vPrzelicz >= 0) && (vPrzelicz < 1)) tabHistogramWiatr[0] += 1;
-                if ((vPrzelicz >= 1) && (vPrzelicz < 2)) tabHistogramWiatr[1] += 1;
-                if ((vPrzelicz >= 2) && (vPrzelicz < 3)) tabHistogramWiatr[2] += 1;
-                if ((vPrzelicz >= 3) && (vPrzelicz < 4)) tabHistogramWiatr[3] += 1;
-                if ((vPrzelicz >= 4) && (vPrzelicz < 5)) tabHistogramWiatr[4] += 1;
-                if ((vPrzelicz >= 5) && (vPrzelicz < 6)) tabHistogramWiatr[5] += 1;
-                if ((vPrzelicz >= 6) && (vPrzelicz < 7)) tabHistogramWiatr[6] += 1;
-                if ((vPrzelicz >= 7) && (vPrzelicz < 8)) tabHistogramWiatr[7] += 1;
-                if ((vPrzelicz >= 8) && (vPrzelicz < 9)) tabHistogramWiatr[8] += 1;
-                if ((vPrzelicz >= 9) && (vPrzelicz < 10)) tabHistogramWiatr[9] += 1;
-
-                if ((vPrzelicz >= 10) && (vPrzelicz < 11)) tabHistogramWiatr[10] += 1;
-                if ((vPrzelicz >= 11) && (vPrzelicz < 12)) tabHistogramWiatr[11] += 1;
-                if ((vPrzelicz >= 12) && (vPrzelicz < 13)) tabHistogramWiatr[12] += 1;
-                if ((vPrzelicz >= 13) && (vPrzelicz < 14)) tabHistogramWiatr[13] += 1;
-                if ((vPrzelicz >= 14) && (vPrzelicz < 15)) tabHistogramWiatr[14] += 1;
-                if ((vPrzelicz >= 15) && (vPrzelicz < 16)) tabHistogramWiatr[15] += 1;
-                if ((vPrzelicz >= 16) && (vPrzelicz < 17)) tabHistogramWiatr[16] += 1;
-                if ((vPrzelicz >= 17) && (vPrzelicz < 18)) tabHistogramWiatr[17] += 1;
-                if ((vPrzelicz >= 18) && (vPrzelicz < 19)) tabHistogramWiatr[18] += 1;
-                if ((vPrzelicz >= 19) && (vPrzelicz < 20)) tabHistogramWiatr[19] += 1;
-
-                if ((vPrzelicz >= 20) && (vPrzelicz < 21)) tabHistogramWiatr[20] += 1;
-                if ((vPrzelicz >= 21) && (vPrzelicz < 22)) tabHistogramWiatr[21] += 1;
-                if ((vPrzelicz >= 22) && (vPrzelicz < 23)) tabHistogramWiatr[22] += 1;
-                if ((vPrzelicz >= 23) && (vPrzelicz < 24)) tabHistogramWiatr[23] += 1;
-                if ((vPrzelicz >= 24) && (vPrzelicz < 25)) tabHistogramWiatr[24] += 1;
-                if ((vPrzelicz >= 25) && (vPrzelicz < 26)) tabHistogramWiatr[25] += 1;
-                if ((vPrzelicz >= 26) && (vPrzelicz < 27)) tabHistogramWiatr[26] += 1;
-                if ((vPrzelicz >= 27) && (vPrzelicz < 28)) tabHistogramWiatr[27] += 1;
-                if ((vPrzelicz >= 28) && (vPrzelicz < 29)) tabHistogramWiatr[28] += 1;
-                if ((vPrzelicz >= 29) && (vPrzelicz < 30)) tabHistogramWiatr[29] += 1;
+                for (int j = 0; j< 30; j++)
+                {
+                    inkrementujTablice(vPrzelicz, j);
+                }
             }
 
             for (int i = 0; i < tabHistogramWiatr.Length; i++)
@@ -343,12 +321,5 @@ namespace lab1_v2
 
         return energiaCalkowita;
         }
-            
-
-        
-
-
-
-
     }
 }
