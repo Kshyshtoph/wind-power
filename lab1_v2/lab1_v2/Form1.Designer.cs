@@ -76,7 +76,7 @@
             this.otworzPlikToolStripMenuItem});
             this.manuToolStripMenuItem.Name = "manuToolStripMenuItem";
             this.manuToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
-            this.manuToolStripMenuItem.Text = "Manu";
+            this.manuToolStripMenuItem.Text = "Menu";
             // 
             // otworzPlikToolStripMenuItem
             // 
@@ -107,19 +107,19 @@
             series3.ChartArea = "ChartArea2";
             series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series3.Legend = "Legend1";
-            series3.Name = "Series3";
+            series3.Name = "Moc turbiny - interpolacja";
             series4.ChartArea = "ChartArea2";
             series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series4.Legend = "Legend1";
-            series4.Name = "Series4";
+            series4.Name = "Moc turbiny - średnia";
             series5.ChartArea = "ChartArea2";
             series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series5.Legend = "Legend1";
-            series5.Name = "Series5";
+            series5.Name = "Moc turbiny - proporcja";
             series6.ChartArea = "ChartArea3";
             series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series6.Legend = "Legend1";
-            series6.Name = "Series6";
+            series6.Name = "Gęstość mocy";
             this.chart1.Series.Add(series1);
             this.chart1.Series.Add(series2);
             this.chart1.Series.Add(series3);

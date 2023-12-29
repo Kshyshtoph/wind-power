@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace lab1_v2
@@ -40,18 +36,10 @@ namespace lab1_v2
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedIndex == 0) liczbadni = 31;
+            int i = comboBox1.SelectedIndex; 
             if (comboBox1.SelectedIndex == 1) liczbadni = 28;
-            if (comboBox1.SelectedIndex == 2) liczbadni = 31;
-            if (comboBox1.SelectedIndex == 3) liczbadni = 30;
-            if (comboBox1.SelectedIndex == 4) liczbadni = 31;
-            if (comboBox1.SelectedIndex == 5) liczbadni = 30;
-            if (comboBox1.SelectedIndex == 6) liczbadni = 31;
-            if (comboBox1.SelectedIndex == 7) liczbadni = 31;
-            if (comboBox1.SelectedIndex == 8) liczbadni = 30;
-            if (comboBox1.SelectedIndex == 9) liczbadni = 31;
-            if (comboBox1.SelectedIndex == 10) liczbadni = 30;
-            if (comboBox1.SelectedIndex == 11) liczbadni = 31;
+            if (i == 3 || i == 5 || i == 8 || i == 10) liczbadni = 30;
+            if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11) liczbadni = 31;
             if (comboBox1.SelectedIndex == 12) liczbadni = 365;
         }
 
@@ -82,20 +70,16 @@ namespace lab1_v2
             turbina = new Turbina(comboBox2.Items[comboBox2.SelectedIndex].ToString(), comboBox2.SelectedIndex);
             turbina.wysTurbiny = symulator.tabDaneTurbiny[comboBox2.SelectedIndex, 0];
 
-            MessageBox.Show(turbina.mocTurbinyModel1(3.7, symulator.tabDaneTurbiny).ToString());
-            MessageBox.Show(turbina.mocTurbinyModel2(3.7, symulator.tabKrzywaMocy).ToString());
-            MessageBox.Show(turbina.mocTurbinyModel3(3.7, symulator.tabKrzywaMocy).ToString());
+            MessageBox.Show(turbina.mocTurbinyInterpolacja(3.7, symulator.tabDaneTurbiny).ToString());
+            MessageBox.Show(turbina.mocTurbinySrednia(3.7, symulator.tabKrzywaMocy).ToString());
+            MessageBox.Show(turbina.mocTurbinyProporcja(3.7, symulator.tabKrzywaMocy).ToString());
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            turbina.rysujKrzywaModel1(chart1, symulator.tabDaneTurbiny);
-            turbina.rysujKrzywaModel2(chart1, symulator.tabKrzywaMocy);
-            turbina.rysujKrzywaModel3(chart1, symulator.tabKrzywaMocy);
-
-
-
-
+            turbina.rysujKrzywaInterpolacja(chart1, symulator.tabDaneTurbiny);
+            turbina.rysujKrzywaSrednia(chart1, symulator.tabKrzywaMocy);
+            turbina.rysujKrzywaProporcja(chart1, symulator.tabKrzywaMocy);
         }
 
         private void chart1_Click(object sender, EventArgs e)
@@ -105,10 +89,17 @@ namespace lab1_v2
 
         private void button4_Click(object sender, EventArgs e)
         {
+            if(turbina == null)
+            {
+                MessageBox.Show("nie ustawiono turbiny / nie wygenerowano modeli");
+                return;
+            }
+            if(Enumerable.Aggregate(symulator.tabHistogramWiatr,(acc, x)=> acc+x) == 0)
+            {
+                MessageBox.Show("Histogram wiatru jest pusty!");
+            }
             turbina.gestoscMocy(symulator.tabHistogramWiatr, symulator.tabKrzywaMocy);
             turbina.rysujGestoscMocy(chart1);
-            MessageBox.Show(turbina.energiaGenerowana(symulator.tabWiatr, symulator.tabKrzywaMocy, symulator.krokWiatr).ToString());
-            
         }
     }
 }

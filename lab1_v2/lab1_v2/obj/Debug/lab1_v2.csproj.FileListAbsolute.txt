@@ -25,3 +25,16 @@ D:\projektGłuchyC#\dobre\lab3_v2\lab1_v2\lab1_v2\obj\Debug\lab1_v2.Properties.R
 D:\projektGłuchyC#\dobre\lab3_v2\lab1_v2\lab1_v2\obj\Debug\lab1_v2.csproj.GenerateResource.cache
 D:\projektGłuchyC#\dobre\lab3_v2\lab1_v2\lab1_v2\obj\Debug\lab1_v2.exe
 D:\projektGłuchyC#\dobre\lab3_v2\lab1_v2\lab1_v2\obj\Debug\lab1_v2.pdb
+C:\Users\User\Downloads\dobre\dobre\lab3_v2\lab1_v2\lab1_v2\bin\Debug\lab1_v2.exe.config
+C:\Users\User\Downloads\dobre\dobre\lab3_v2\lab1_v2\lab1_v2\bin\Debug\lab1_v2.exe
+C:\Users\User\Downloads\dobre\dobre\lab3_v2\lab1_v2\lab1_v2\bin\Debug\lab1_v2.pdb
+C:\Users\User\Downloads\dobre\dobre\lab3_v2\lab1_v2\lab1_v2\obj\Debug\lab1_v2.csproj.AssemblyReference.cache
+C:\Users\User\Downloads\dobre\dobre\lab3_v2\lab1_v2\lab1_v2\obj\Debug\lab1_v2.Form1.resources
+C:\Users\User\Downloads\dobre\dobre\lab3_v2\lab1_v2\lab1_v2\obj\Debug\lab1_v2.Properties.Resources.resources
+C:\Users\User\Downloads\dobre\dobre\lab3_v2\lab1_v2\lab1_v2\obj\Debug\lab1_v2.csproj.GenerateResource.cache
+C:\Users\User\Downloads\dobre\dobre\lab3_v2\lab1_v2\lab1_v2\obj\Debug\lab1_v2.csproj.CoreCompileInputs.cache
+C:\Users\User\Downloads\dobre\dobre\lab3_v2\lab1_v2\lab1_v2\obj\Debug\lab1_v2.exe
+C:\Users\User\Downloads\dobre\dobre\lab3_v2\lab1_v2\lab1_v2\obj\Debug\lab1_v2.pdb
+C:\Users\User\Downloads\dobre\dobre\lab3_v2\lab1_v2\lab1_v2\bin\Debug\Newtonsoft.Json.dll
+C:\Users\User\Downloads\dobre\dobre\lab3_v2\lab1_v2\lab1_v2\bin\Debug\Newtonsoft.Json.xml
+C:\Users\User\Downloads\dobre\dobre\lab3_v2\lab1_v2\lab1_v2\obj\Debug\lab1_v2.csproj.CopyComplete
