@@ -95,10 +95,10 @@ namespace lab1_v2
             for (int i = 0; i< tabDaneTurbiny.GetLength(0); i++)
             {
                 Turbina t = new Turbina(" ", i);
-                double sumaMocy = t.SumaEnergii(tabHistogramWiatr, tabKrzywaMocy);
-                wyniki.Add(sumaMocy);
+                double sumaEnergii = t.SumaEnergii(tabHistogramWiatr, tabKrzywaMocy);
+                wyniki.Add(sumaEnergii);
                 int nrSerii = i + 6;
-                wykres.Series[nrSerii].Points.AddXY(i, sumaMocy); //w petli nanosimy sumę mocy wygenerowanej przez każdą z turbin
+                wykres.Series[nrSerii].Points.AddXY(i, sumaEnergii); //w petli nanosimy sumę mocy wygenerowanej przez każdą z turbin
             }
         }
 
