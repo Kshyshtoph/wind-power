@@ -4,15 +4,17 @@ using System.Windows.Forms; //na potrzeby funkcji OpenFileDialog
 using System.IO; //na potrzeby funkcji wbudowanej StreamReader
 using System.Windows.Forms.DataVisualization.Charting;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json; //na potrzeby rysowania Chart 
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq; //na potrzeby rysowania Chart 
 
 namespace lab1_v2
 {
     public class Klasa //klasa musi byc publiczna bo korzytsamy z niej w drugim formularzu
     {
-        public double[,] tabDaneTurbiny = new double[2, 6];//paramtry charakterystyczne turbiny
+        public double[,] tabDaneTurbiny = new double[3, 6];//paramtry charakterystyczne turbiny
         //wyskośc,moc znamionowa, vcutin,vPzn,vcutout
-        public double[,] tabKrzywaMocy = new double[2, 30];//krzywa mocy z notry katalogowej
+        public double[,] tabKrzywaMocy = new double[3, 30];//krzywa mocy z notry katalogowej
 
         public double[] tabWiatr = new double[650000];//tablica predkosci wiatru - do niej bedziemy zapisywac wartosc z pliku z pomiarami
         public double krokWiatr = 0; //zmienna w której zapiszemy sredmi krok pomiaru predkosci wiatru
@@ -23,41 +25,37 @@ namespace lab1_v2
         {
             JObject o1 = JObject.Parse(File.ReadAllText("../../e-44.json"));
             JObject o2 = JObject.Parse(File.ReadAllText("../../e-101.json"));
-            for (int i = 0; i<5; i++) // zaciągnięcie danych z zewnętrznego pliku
+            JObject o3 = JObject.Parse(File.ReadAllText("../../e-33.json"));
+            for (int i = 0; i < 5; i++) // zaciągnięcie danych z zewnętrznego pliku
             {
                 tabDaneTurbiny[0, i] = (double)o1["daneTurbiny"][i];
                 tabDaneTurbiny[1, i] = (double)o2["daneTurbiny"][i];
+                tabDaneTurbiny[2, i] = (double)o3["daneTurbiny"][i];
             }
             for (int i = 0; i < 30; i++)
             {
                 tabKrzywaMocy[0, i] = (double)o1["krzywaMocy"][i];
                 tabKrzywaMocy[1, i] = (double)o2["krzywaMocy"][i];
+                tabKrzywaMocy[2, i] = (double)o3["krzywaMocy"][i];
             }
         }
 
         public void otworzPlikWiatr(int liczbaDni)//tworzymy funkcje ktora pozwoli na otwrcie pliku z predkosciami wiatru
         {
-            double suma = 0;//zmienna pomocnicza
             string nazwaPliku = "";
+
             OpenFileDialog openFile = new OpenFileDialog();//funkcja wbudowana służąca do otwarcia pliku z danymi predkosci wiatru
             if (openFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)//jesli plik istnieje i uda sie go otworzyc to wchodzimy w if-a
             {
-                nazwaPliku = openFile.FileName; //niewazne jaka nazwa pliku  teraz bedzie sie on nazwyał "nazwaPliku"
-                StreamReader plik = new StreamReader(nazwaPliku);//korzystajac z funkcji wbudowanej czytamy znaki
-                int licznik = 0;
-                while (!plik.EndOfStream)//powtarzamy petle tak długo az odczytamy wszystkie znaki
+                nazwaPliku = openFile.FileName; //niewazne jaka nazwa pliku  teraz bedzie sie on nazwyał "nazwaPliku" - tak naprawdę to nie - w zmiennej nazwaPliku zapisujemy faktyczną nazwę pliku
+                JObject o1 = JObject.Parse(File.ReadAllText(nazwaPliku));
+                JArray srednie = (JArray)o1["WindSpeed"]["averages"];
+                Array.Resize(ref tabWiatr, srednie.Count); //ewentualne zmniejszenie tablicy wiatr do wilkość licznik, aby na koncu nie było 0000000
+
+                for (int i = 0; i < srednie.Count; i++)
                 {
-                    if (tabWiatr.Length <= licznik) Array.Resize(ref tabWiatr, tabWiatr.Length + 1);
-                    //ziwekszamy tablice tak długo jak są jeszcze pomiary w pliku
-                    tabWiatr[licznik] = Convert.ToDouble(plik.ReadLine());//odczytane znaki konwertuejmy i zapisujemy do tablicy
-                    suma += tabWiatr[licznik];//wszytkie wartosci predkosci wiatru dodajemy do siebie , zeby pozniej wyznaczyc średnią prędkość wiatru
-                    licznik++;
+                    tabWiatr[i] = (double)srednie[i][1];
                 }
-                predSrednia = suma / licznik;//wyznacznie predkosci sredniej wiatru
-                Array.Resize(ref tabWiatr, licznik); //ewentualne zmniejszenie tablicy wiatr do wilkość licznik, aby na koncu nie było 0000000
-                krokWiatr = (double)(365 * 24) / licznik;//wyzbnacznire sredniego kroku predkosci wiatru
-                liczbaProbekDzienWiatr = (int)(licznik / liczbaDni);//liczba probek jak została wygenerowana w ciagu dnia
-                plik.Close();//zaykamy plik na ktorym pracowalismy
             }
             utworzHistogramWiatr();
         }
@@ -71,32 +69,92 @@ namespace lab1_v2
                 int index = (int)Math.Floor(vPrzelicz);
                 tabHistogramWiatr[index] += 1;
             }
-
-            for (int i = 0; i < tabHistogramWiatr.Length; i++)
-            {
-                tabHistogramWiatr[i] /= tabWiatr.Length; //chcac uzyskac gestosc prawodpowobieniastrqwa wystapienia poszczegolnych predkosci wiatru trzeba podzielic liczbe wystpien przez wyszystkie pomiary 
-            }
-            MessageBox.Show(String.Join(", ", tabHistogramWiatr, "utworzono histogram wiatr"));
-
+                        for (int i = 0; i < tabHistogramWiatr.Length; i++)
+                        {
+                            tabHistogramWiatr[i] /= tabHistogramWiatr.Length; //chcac uzyskac gestosc prawdopodobieństwa wystapienia poszczegolnych predkosci wiatru trzeba podzielic liczbe wystpien przez wyszystkie pomiary 
+                        }
+            MessageBox.Show(String.Join(", ", tabHistogramWiatr), "utworzono histogram wiatr");
         }
 
         private double predWiatruWysokosc(double predWiatr, double wysokosc, double alfa)
         {
-            return predWiatr * Math.Pow((wysokosc / 10), alfa); //wzór wynikajacy z pionowego profilu wiatru
+            return predWiatr * Math.Pow(wysokosc / 10, alfa); //wzór wynikajacy z pionowego profilu wiatru
         }
 
         public void rysujHistogram(Chart wykres, double[] tab, int nrSerii)
         {
-            wykres.Series[nrSerii].Points.Clear();//przed rysowaniem czyscimy wykres
+            wykres.Series[nrSerii].Points.Clear(); //przed rysowaniem czyscimy wykres
             for (int i = 0; i < tab.Length; i++)
             {
-                wykres.Series[nrSerii].Points.AddXY(i, tab[i] * 3000 );//w petli nanosimy poszczegolne prawdopodobienastwa wystapienia  poszczegolnych predkosci
+                wykres.Series[nrSerii].Points.AddXY(i, tab[i] );//w petli nanosimy poszczegolne prawdopodobienastwa wystapienia  poszczegolnych predkosci
+            }
+        }
+        public void rysujPorownanie(Chart wykres)
+        {
+            List<double> wyniki = new List<double>();
+            for (int i = 0; i< tabDaneTurbiny.GetLength(0); i++)
+            {
+                Turbina t = new Turbina(" ", i);
+                double sumaMocy = t.SumujMoc(tabHistogramWiatr, tabKrzywaMocy);
+                wyniki.Add(sumaMocy);
+                int nrSerii = i + 6;
+                wykres.Series[nrSerii].Points.AddXY(i, sumaMocy);//w petli nanosimy poszczegolne prawdopodobienastwa wystapienia  poszczegolnych 
             }
         }
 
         private double Weibull(double k, double c, double predW)
         {
             return (k / c) * Math.Pow((predW / c), k - 1) * Math.Exp(-Math.Pow((predW / c), k));
+        }
+        public void optymalnyWeibull(double[] wiatr)
+        {
+            var decimalEpsilon = new decimal(1, 0, 0, false, 27); // zmienne pomocnicze, c# nie wspiera nieskończoności w typie decimal
+            var decimalNieskonczonosc = 1m / decimalEpsilon;  // zmienne pomocnicze, c# nie wspiera nieskończoności w typie decimal
+
+
+            List<(decimal wynik, double c, double k)> wyniki = new List<(decimal, double, double)>(wiatr.Length); // dwie najbardziej podobne wykresy mają najmniejszą powierzchnię między sobą   
+            (decimal wynik, double c, double k) najlepszyWynik = (decimalNieskonczonosc, 0, 0);                   // w wynikach zapisujemy powierzchnię między wykresami oraz wartości c i k
+            for (double c = 1.0; c < 10.0; c += .1)
+            {
+                List<(decimal wynik, double c, double k)> flatWyniki = new List<(decimal wynik, double c, double k)>();
+
+                for (double k = 1.0; k < 10.0; k += .1)
+                {
+                    decimal powierzchnia = 0;
+                    double poprzedniaOdleglosc = 0;
+                    for (int i = 0; i < wiatr.Length; i++)
+                    {
+                        double Wb = Weibull(k, c, i);
+                        double wysokosc = tabHistogramWiatr[i] ;
+                        double odleglosc = Wb - wysokosc;
+
+                        bool skrzyzowane = ((poprzedniaOdleglosc < 0 && odleglosc > 0)  // Wykresy krzyżują się jeśli nastąpiła zmiana dodatniości różnicy między nimi
+                                        || (poprzedniaOdleglosc > 0 && odleglosc < 0)); // Jeżeli wykresy nie są skrzyżowane powierzchnię między nimi tworzy trapez. 
+                                                                                        // W innym wypadku powierzchnię tworzą 2 trójkąty leżące pomiędzy jego przekątnymi a podstawami.
+                        double wysokoscTrapezu = 1;
+                        if (!skrzyzowane)
+                        {
+                            powierzchnia += (decimal)Math.Round(((Math.Abs(poprzedniaOdleglosc) + Math.Abs(odleglosc)) / 2 * wysokoscTrapezu), 10, MidpointRounding.AwayFromZero); // pomijam mnożenie przez szerokość = 1
+                                                                // wartość bezwzględna
+                        }
+                        else {
+                            double wysokoscTrojkata1 = wysokoscTrapezu / Math.Abs(poprzedniaOdleglosc) * Math.Abs(odleglosc); // trójkąty pomiędzy przekątnymi a 
+                            double wysokoscTrojkata2 = wysokoscTrapezu / Math.Abs(odleglosc) * Math.Abs(poprzedniaOdleglosc); // podstawami trapezu zawsze są podobne
+                            powierzchnia += (decimal)Math.Round((Math.Abs(poprzedniaOdleglosc) * wysokoscTrojkata1 / 2), 10, MidpointRounding.AwayFromZero); 
+                            powierzchnia += (decimal)Math.Round((Math.Abs(odleglosc) * wysokoscTrojkata2 / 2), 10, MidpointRounding.AwayFromZero); 
+                        }
+                    }
+                    wyniki.Add((powierzchnia, c, k));
+                }
+            }
+
+            foreach (var w in wyniki)
+            {
+                if (w.wynik < najlepszyWynik.wynik)
+                    najlepszyWynik = w;
+            }
+
+            MessageBox.Show("Proponowane wartości zmiennych: k=" + najlepszyWynik.k.ToString() + " c=" + najlepszyWynik.c.ToString());
         }
 
         public void rysujWeibull(Chart wykres, double wspK, double wspC)
@@ -106,7 +164,7 @@ namespace lab1_v2
 
             wykres.Series[1].Points.Clear();
 
-            for (int i = 0; i < 31; i++)
+            for (int i = 0; i < tabHistogramWiatr.Length; i++)
             {
                 wykres.Series[1].Points.AddXY(i, Weibull(wspK, wspC, i));
             }
@@ -148,7 +206,9 @@ namespace lab1_v2
             if ((predkoscWiatru > vCutIn) && (predkoscWiatru < vPZn))
             {
                 double wspA = mocZn / (vPZn - vCutIn);
-                moc = -wspA * vCutIn + wspA * predkoscWiatru;
+                // moc = -wspA * vCutIn + wspA * predkoscWiatru;
+                // moc = wspA * (-1 * vCutIn) + wspA * predkoscWiatru;
+                moc = wspA * (predkoscWiatru - vCutIn); 
             }
 
             return moc;
@@ -156,11 +216,13 @@ namespace lab1_v2
 
         public double mocTurbinySrednia(double vw, double[,] tabkrzywa) //metoda średniej
         {
-            double moc = 0;
+            double moc;
 
             int vwDolna = (int)Math.Floor(vw);
             int vwGorna = (int)Math.Ceiling(vw);
-            moc = (tabkrzywa[numerTurbiny, vwDolna] + tabkrzywa[numerTurbiny, vwGorna]) / 2;
+            double minMoc = tabkrzywa[numerTurbiny, vwDolna];
+            double maxMoc = tabkrzywa[numerTurbiny, vwGorna];
+            moc = (minMoc + maxMoc) / 2;
             return moc;
         }
 
@@ -194,9 +256,10 @@ namespace lab1_v2
             wykres.ChartAreas[1].AxisX.Maximum = 30;
 
             wykres.Series[3].Points.Clear();
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 29; i++)
             {
-                wykres.Series[3].Points.AddXY(i, mocTurbinySrednia(i, tab));
+                double wartosc = mocTurbinySrednia(i + .5, tab);
+                wykres.Series[3].Points.AddXY(i, wartosc);
             }
         }
 
@@ -220,34 +283,42 @@ namespace lab1_v2
 
         public double energiaGenerowana(double[] tabWiatr, double[,] tabKrzywa, double krokczas)
         {
-        double energiaCalkowita = 0;
+            double energiaCalkowita = 0;
             MessageBox.Show("krokczas ", krokczas.ToString());
 
-            for (int i=0; i<tabWiatr.Length; i++)
+            for (int i = 0; i < tabWiatr.Length; i++)
             {
                 energiaCalkowita += mocTurbinySrednia(tabWiatr[i], tabKrzywa) * krokczas;
             }
 
-        return energiaCalkowita;
+            return energiaCalkowita;
         }
-    public void gestoscMocy(double[] tabHis, double[,] tabKrzywa)
-    {
-        double predkosc = 0;
-        for (int i = 0; i < tabGestoscMocy.Length; i++)
+        public void gestoscMocy(double[] tabHis, double[,] tabKrzywa)
         {
-            tabGestoscMocy[i] = tabHis[i] * mocTurbinySrednia(predkosc, tabKrzywa);
-            predkosc += 1;
+            for (int i = 0; i < tabGestoscMocy.Length; i++)
+            {
+                tabGestoscMocy[i] = tabHis[i] * mocTurbinySrednia(i, tabKrzywa);
+            }
+        }
+        public void rysujGestoscMocy(Chart wykres)
+        {
+            wykres.ChartAreas[2].AxisX.Minimum = 0;
+            wykres.ChartAreas[2].AxisX.Maximum = 30;
+            wykres.Series[5].Points.Clear();
+            for (int i = 0; i < 30; i++)
+            {
+                wykres.Series[5].Points.AddXY(i, tabGestoscMocy[i]);
+            }
+        }
+
+        internal double SumujMoc(double[] tabHis, double[,] tabKrzywa)
+        {
+            double suma = 0;
+            for (int i = 0; i < tabHis.Length; i++)
+            {
+                suma += tabHis[i] * mocTurbinySrednia(i, tabKrzywa);
+            }
+            return suma;
         }
     }
-    public void rysujGestoscMocy(Chart wykres)
-    {
-        wykres.ChartAreas[2].AxisX.Minimum = 0;
-        wykres.ChartAreas[2].AxisX.Maximum = 30;
-        wykres.Series[5].Points.Clear();
-        for (int i = 0; i < 30; i++)
-        {
-            wykres.Series[5].Points.AddXY(i, tabGestoscMocy[i]);
-        }
-    }
-}
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -20,7 +18,7 @@ namespace lab1_v2
             liczbadni = 31;
             comboBox1.SelectedIndex = 0; //domyslnie ustawionty styczeń
             chart1.ChartAreas[0].AxisX.Minimum = 0;
-            chart1.ChartAreas[0].AxisX.Maximum = 30; 
+            chart1.ChartAreas[0].AxisX.Maximum = 30;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -31,7 +29,7 @@ namespace lab1_v2
         private void otworzPlikToolStripMenuItem_Click(object sender, EventArgs e)
         {
             symulator.otworzPlikWiatr(liczbadni);//wywołanie funkcji otwierajacej plik z probkami wiatru
-            symulator.rysujHistogram(chart1, symulator.tabHistogramWiatr, 0);
+            symulator.rysujHistogram(chart1, symulator.tabHistogramWiatr, 0); 
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -52,21 +50,32 @@ namespace lab1_v2
         {
             symulator.rysujWeibull(chart1, (double)NUD_wspK.Value, (double)NUD_wspC.Value);
         }
+        private void optWeibullClick(object sender, EventArgs e)
+        {
+            symulator.optymalnyWeibull(symulator.tabHistogramWiatr);
+        }
+        private void porownanieMocyClick(object sender, EventArgs e)
+        {
+            symulator.rysujPorownanie(chart1); 
+        }
 
         private void NUD_wspK_ValueChanged(object sender, EventArgs e)
         {
             symulator.rysujWeibull(chart1, (double)NUD_wspK.Value, (double)NUD_wspC.Value);
-
         }
 
         private void NUD_wspC_ValueChanged(object sender, EventArgs e)
         {
             symulator.rysujWeibull(chart1, (double)NUD_wspK.Value, (double)NUD_wspC.Value);
-
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void generuj3Modele(object sender, EventArgs e)
         {
+            if (comboBox2.SelectedIndex == -1)
+            {
+                MessageBox.Show("Nie ustawiono turbiny");
+                return;
+            }
             turbina = new Turbina(comboBox2.Items[comboBox2.SelectedIndex].ToString(), comboBox2.SelectedIndex);
             turbina.wysTurbiny = symulator.tabDaneTurbiny[comboBox2.SelectedIndex, 0];
 
@@ -75,8 +84,13 @@ namespace lab1_v2
             MessageBox.Show(turbina.mocTurbinyProporcja(3.7, symulator.tabKrzywaMocy).ToString());
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void rysuj3Modele(object sender, EventArgs e)
         {
+            if (turbina == null)
+            {
+                MessageBox.Show("Nie ustawiono turbiny / nie wygenerowano modeli");
+                return;
+            }
             turbina.rysujKrzywaInterpolacja(chart1, symulator.tabDaneTurbiny);
             turbina.rysujKrzywaSrednia(chart1, symulator.tabKrzywaMocy);
             turbina.rysujKrzywaProporcja(chart1, symulator.tabKrzywaMocy);

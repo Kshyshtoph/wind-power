@@ -1,4 +1,7 @@
-﻿namespace lab1_v2
+﻿using System;
+using System.Windows.Forms.DataVisualization.Charting;
+
+namespace lab1_v2
 {
     partial class Form1
     {
@@ -31,13 +34,18 @@
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.manuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.otworzPlikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,6 +59,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.buttonOptymalnyWeibull = new System.Windows.Forms.Button();
+            this.buttonPorownanie = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
@@ -90,42 +100,77 @@
             chartArea1.Name = "ChartArea1";
             chartArea2.Name = "ChartArea2";
             chartArea3.Name = "ChartArea3";
+            chartArea4.Name = "ChartArea4";
+
+            chartArea1.AxisX.Title = "Prędkość wiatru";
+            chartArea1.AxisY.Title = "Gęstość prawdopodobieństwa";
+
+
+
             this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.ChartAreas.Add(chartArea2);
             this.chart1.ChartAreas.Add(chartArea3);
+            this.chart1.ChartAreas.Add(chartArea4);
+
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(270, 40);
+            this.chart1.Location = new System.Drawing.Point(290, 40);
             this.chart1.Name = "chart1";
+
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
-            series1.Name = "Series1";
+            series1.Name = "Gęstość prawdopodobieństwa wiatru o danej prędkości";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+
             series2.ChartArea = "ChartArea1";
             series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series2.Legend = "Legend1";
-            series2.Name = "Series2";
+            series2.Name = "Rozkład Weibulla";
+
             series3.ChartArea = "ChartArea2";
             series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series3.Legend = "Legend1";
-            series3.Name = "Moc turbiny - interpolacja";
+            series3.Name = "Moc turbiny - model 1";
+
             series4.ChartArea = "ChartArea2";
             series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series4.Legend = "Legend1";
-            series4.Name = "Moc turbiny - średnia";
+            series4.Name = "Moc turbiny - model 2";
+
             series5.ChartArea = "ChartArea2";
             series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series5.Legend = "Legend1";
-            series5.Name = "Moc turbiny - proporcja";
+            series5.Name = "Moc turbiny - model 3";
+
             series6.ChartArea = "ChartArea3";
             series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series6.Legend = "Legend1";
             series6.Name = "Gęstość mocy";
+
+            series7.ChartArea = "ChartArea4";
+            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+            series7.Legend = "Legend1";
+            series7.Name = "Moc wygenerowana - turbina 1";
+
+            series8.ChartArea = "ChartArea4";
+            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+            series8.Legend = "Legend1";
+            series8.Name = "Moc wygenerowana - turbina 2";
+
+            series9.ChartArea = "ChartArea4";
+            series9.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+            series9.Legend = "Legend1";
+            series9.Name = "Moc wygenerowana - turbina 3";
+
             this.chart1.Series.Add(series1);
             this.chart1.Series.Add(series2);
             this.chart1.Series.Add(series3);
             this.chart1.Series.Add(series4);
             this.chart1.Series.Add(series5);
             this.chart1.Series.Add(series6);
+            this.chart1.Series.Add(series7);
+            this.chart1.Series.Add(series8);
+            this.chart1.Series.Add(series9);
             this.chart1.Size = new System.Drawing.Size(728, 284);
             this.chart1.TabIndex = 1;
             this.chart1.Text = "chart1";
@@ -157,6 +202,8 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.buttonOptymalnyWeibull);
+            this.groupBox1.Controls.Add(this.buttonPorownanie);
             this.groupBox1.Controls.Add(this.NUD_wspC);
             this.groupBox1.Controls.Add(this.NUD_wspK);
             this.groupBox1.Controls.Add(this.label2);
@@ -177,6 +224,26 @@
             this.button1.Text = "Rozkład Weibulla";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            ///
+            /// optymalny Weibull
+            ///
+            this.buttonOptymalnyWeibull.Location = new System.Drawing.Point(9, 123);
+            this.buttonOptymalnyWeibull.Name = "buttonOptymalnyWeibull";
+            this.buttonOptymalnyWeibull.Size = new System.Drawing.Size(170, 25);
+            this.buttonOptymalnyWeibull.TabIndex = 4;
+            this.buttonOptymalnyWeibull.Text = "Optymalny rozkład Weibulla";
+            this.buttonOptymalnyWeibull.UseVisualStyleBackColor = true;
+            this.buttonOptymalnyWeibull.Click += new System.EventHandler(this.optWeibullClick);
+            ///
+            /// porównanie turbin
+            ///
+            this.buttonPorownanie.Location = new System.Drawing.Point(9, 153);
+            this.buttonPorownanie.Name = "buttonPorownanie";
+            this.buttonPorownanie.Size = new System.Drawing.Size(170, 25);
+            this.buttonPorownanie.TabIndex = 4;
+            this.buttonPorownanie.Text = "Porównaj wygenerowaną moc";
+            this.buttonPorownanie.UseVisualStyleBackColor = true;
+            this.buttonPorownanie.Click += new System.EventHandler(this.porownanieMocyClick);
             // 
             // NUD_wspC
             // 
@@ -260,7 +327,8 @@
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Items.AddRange(new object[] {
             "E-44",
-            "E-101"});
+            "E-101",
+            "E-33"});
             this.comboBox2.Location = new System.Drawing.Point(45, 245);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(129, 21);
@@ -274,7 +342,7 @@
             this.button2.TabIndex = 5;
             this.button2.Text = "Tworzenie 3 modeli";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.generuj3Modele);
             // 
             // button3
             // 
@@ -284,7 +352,7 @@
             this.button3.TabIndex = 6;
             this.button3.Text = "Rysuj model 1";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.Click += new System.EventHandler(this.rysuj3Modele);
             // 
             // button4
             // 
@@ -325,6 +393,8 @@
 
         }
 
+
+
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
@@ -342,6 +412,9 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button buttonOptymalnyWeibull;
+        private System.Windows.Forms.Button buttonPorownanie;
+
     }
 }
 
