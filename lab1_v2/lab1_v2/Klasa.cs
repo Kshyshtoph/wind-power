@@ -95,10 +95,10 @@ namespace lab1_v2
             for (int i = 0; i< tabDaneTurbiny.GetLength(0); i++)
             {
                 Turbina t = new Turbina(" ", i);
-                double sumaMocy = t.SumujMoc(tabHistogramWiatr, tabKrzywaMocy);
+                double sumaMocy = t.SumaEnergii(tabHistogramWiatr, tabKrzywaMocy);
                 wyniki.Add(sumaMocy);
                 int nrSerii = i + 6;
-                wykres.Series[nrSerii].Points.AddXY(i, sumaMocy);//w petli nanosimy poszczegolne prawdopodobienastwa wystapienia  poszczegolnych 
+                wykres.Series[nrSerii].Points.AddXY(i, sumaMocy); //w petli nanosimy sumę mocy wygenerowanej przez każdą z turbin
             }
         }
 
@@ -108,15 +108,13 @@ namespace lab1_v2
         }
         public void optymalnyWeibull(double[] wiatr)
         {
-            var decimalEpsilon = new decimal(1, 0, 0, false, 27); // zmienne pomocnicze, c# nie wspiera nieskończoności w typie decimal
-            var decimalNieskonczonosc = 1m / decimalEpsilon;  // zmienne pomocnicze, c# nie wspiera nieskończoności w typie decimal
+            
 
 
             List<(decimal wynik, double c, double k)> wyniki = new List<(decimal, double, double)>(wiatr.Length); // dwie najbardziej podobne wykresy mają najmniejszą powierzchnię między sobą   
-            (decimal wynik, double c, double k) najlepszyWynik = (decimalNieskonczonosc, 0, 0);                   // w wynikach zapisujemy powierzchnię między wykresami oraz wartości c i k
+            (decimal wynik, double c, double k) najlepszyWynik = (999999999, 0, 0);                               // w wynikach zapisujemy powierzchnię między wykresami oraz wartości c i k
             for (double c = 1.0; c < 10.0; c += .1)
             {
-                List<(decimal wynik, double c, double k)> flatWyniki = new List<(decimal wynik, double c, double k)>();
 
                 for (double k = 1.0; k < 10.0; k += .1)
                 {
@@ -134,7 +132,7 @@ namespace lab1_v2
                         double wysokoscTrapezu = 1;
                         if (!skrzyzowane)
                         {
-                            powierzchnia += (decimal)Math.Round(((Math.Abs(poprzedniaOdleglosc) + Math.Abs(odleglosc)) / 2 * wysokoscTrapezu), 10, MidpointRounding.AwayFromZero); // pomijam mnożenie przez szerokość = 1
+                            powierzchnia += (decimal)Math.Round(((Math.Abs(poprzedniaOdleglosc) + Math.Abs(odleglosc)) / 2 * wysokoscTrapezu), 10, MidpointRounding.AwayFromZero);
                                                                 // wartość bezwzględna
                         }
                         else {
@@ -277,22 +275,6 @@ namespace lab1_v2
 
 
 
-
-
-
-
-        public double energiaGenerowana(double[] tabWiatr, double[,] tabKrzywa, double krokczas)
-        {
-            double energiaCalkowita = 0;
-            MessageBox.Show("krokczas ", krokczas.ToString());
-
-            for (int i = 0; i < tabWiatr.Length; i++)
-            {
-                energiaCalkowita += mocTurbinySrednia(tabWiatr[i], tabKrzywa) * krokczas;
-            }
-
-            return energiaCalkowita;
-        }
         public void gestoscMocy(double[] tabHis, double[,] tabKrzywa)
         {
             for (int i = 0; i < tabGestoscMocy.Length; i++)
@@ -311,7 +293,7 @@ namespace lab1_v2
             }
         }
 
-        internal double SumujMoc(double[] tabHis, double[,] tabKrzywa)
+        internal double SumaEnergii(double[] tabHis, double[,] tabKrzywa)
         {
             double suma = 0;
             for (int i = 0; i < tabHis.Length; i++)
