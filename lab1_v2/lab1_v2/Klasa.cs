@@ -110,12 +110,12 @@ namespace lab1_v2
         {
             List<(decimal wynik, double c, double k)> wyniki = new List<(decimal, double, double)>(wiatr.Length); // dwie najbardziej podobne wykresy mają najmniejszą powierzchnię między sobą   
             (decimal wynik, double c, double k) najlepszyWynik = (999999999, 0, 0);                               // w wynikach zapisujemy powierzchnię między wykresami oraz wartości c i k
-            double poprzedniaOdleglosc = 0;
             for (double c = 1.0; c < 10.0; c += .1)
             {
 
                 for (double k = 1.0; k < 10.0; k += .1)
                 {
+                    double poprzedniaOdleglosc = 0;
                     decimal powierzchnia = 0;
                     for (int i = 0; i < wiatr.Length; i++)
                     {
@@ -136,8 +136,17 @@ namespace lab1_v2
                         }
                         else
                         {
-                            double wysokoscTrojkata1 = wysokoscTrapezu * Math.Abs(poprzedniaOdleglosc) / Math.Abs(odleglosc); // trójkąty pomiędzy przekątnymi a 
-                            double wysokoscTrojkata2 = wysokoscTrapezu * Math.Abs(odleglosc) / Math.Abs(poprzedniaOdleglosc); // podstawami trapezu zawsze są podobne
+                            double wysokoscTrojkata1, wysokoscTrojkata2;
+                            if(Math.Abs(poprzedniaOdleglosc) >= Math.Abs(odleglosc))
+                            {
+                                wysokoscTrojkata1 = wysokoscTrapezu * Math.Abs(odleglosc) / Math.Abs(poprzedniaOdleglosc);
+                                wysokoscTrojkata2 = wysokoscTrapezu - wysokoscTrojkata1;
+                            }
+                            else
+                            {
+                                wysokoscTrojkata2 = wysokoscTrapezu * Math.Abs(poprzedniaOdleglosc) / Math.Abs(odleglosc);
+                                wysokoscTrojkata1 = wysokoscTrapezu - wysokoscTrojkata2;
+                            }
                             powierzchnia += (decimal)Math.Round((Math.Abs(poprzedniaOdleglosc) * wysokoscTrojkata1 / 2), 10, MidpointRounding.AwayFromZero);
                             powierzchnia += (decimal)Math.Round((Math.Abs(odleglosc) * wysokoscTrojkata2 / 2), 10, MidpointRounding.AwayFromZero);
                         }
