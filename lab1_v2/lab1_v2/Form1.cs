@@ -35,7 +35,7 @@ namespace lab1_v2
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             int i = comboBox1.SelectedIndex; 
-            if (comboBox1.SelectedIndex == 1) liczbadni = 28;
+            if (i == 1) liczbadni = 28;
             if (i == 3 || i == 5 || i == 8 || i == 10) liczbadni = 30;
             if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11) liczbadni = 31;
             if (comboBox1.SelectedIndex == 12) liczbadni = 365;
