@@ -110,18 +110,20 @@ namespace lab1_v2
         {
             List<(decimal wynik, double c, double k)> wyniki = new List<(decimal, double, double)>(wiatr.Length); // dwie najbardziej podobne wykresy mają najmniejszą powierzchnię między sobą   
             (decimal wynik, double c, double k) najlepszyWynik = (999999999, 0, 0);                               // w wynikach zapisujemy powierzchnię między wykresami oraz wartości c i k
+            double poprzedniaOdleglosc = 0;
             for (double c = 1.0; c < 10.0; c += .1)
             {
 
                 for (double k = 1.0; k < 10.0; k += .1)
                 {
                     decimal powierzchnia = 0;
-                    double poprzedniaOdleglosc = 0;
                     for (int i = 0; i < wiatr.Length; i++)
                     {
                         double Wb = Weibull(k, c, i);
                         double wysokosc = tabHistogramWiatr[i];
                         double odleglosc = Wb - wysokosc;
+
+                        poprzedniaOdleglosc = odleglosc;
 
                         bool skrzyzowane = ((poprzedniaOdleglosc < 0 && odleglosc > 0)  // Wykresy krzyżują się jeśli nastąpiła zmiana dodatniości różnicy między nimi
                                         || (poprzedniaOdleglosc > 0 && odleglosc < 0)); // Jeżeli wykresy nie są skrzyżowane powierzchnię między nimi tworzy trapez. 
