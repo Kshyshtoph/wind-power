@@ -69,10 +69,10 @@ namespace lab1_v2
                 int index = (int)Math.Floor(vPrzelicz);
                 tabHistogramWiatr[index] += 1;
             }
-                        for (int i = 0; i < tabHistogramWiatr.Length; i++)
-                        {
-                            tabHistogramWiatr[i] /= tabHistogramWiatr.Length; //chcac uzyskac gestosc prawdopodobieństwa wystapienia poszczegolnych predkosci wiatru trzeba podzielic liczbe wystpien przez wyszystkie pomiary 
-                        }
+            for (int i = 0; i < tabHistogramWiatr.Length; i++)
+            {
+                tabHistogramWiatr[i] /= tabHistogramWiatr.Length; //chcac uzyskac gestosc prawdopodobieństwa wystapienia poszczegolnych predkosci wiatru trzeba podzielic liczbe wystpien przez wyszystkie pomiary 
+            }
             MessageBox.Show(String.Join(", ", tabHistogramWiatr), "utworzono histogram wiatr");
         }
 
@@ -86,19 +86,19 @@ namespace lab1_v2
             wykres.Series[nrSerii].Points.Clear(); //przed rysowaniem czyscimy wykres
             for (int i = 0; i < tab.Length; i++)
             {
-                wykres.Series[nrSerii].Points.AddXY(i, tab[i] );//w petli nanosimy poszczegolne prawdopodobienastwa wystapienia  poszczegolnych predkosci
+                wykres.Series[nrSerii].Points.AddXY(i, tab[i]);//w petli nanosimy poszczegolne prawdopodobienastwa wystapienia  poszczegolnych predkosci
             }
         }
         public void rysujPorownanie(Chart wykres)
         {
             List<double> wyniki = new List<double>();
-            for (int i = 0; i< tabDaneTurbiny.GetLength(0); i++)
+            for (int i = 0; i < tabDaneTurbiny.GetLength(0); i++)
             {
                 Turbina t = new Turbina(" ", i);
-                double sumaEnergii = t.SumaEnergii(tabHistogramWiatr, tabKrzywaMocy);
-                wyniki.Add(sumaEnergii);
+                double sumaMocy = t.SumaEnergii(tabHistogramWiatr, tabKrzywaMocy);
+                wyniki.Add(sumaMocy);
                 int nrSerii = i + 6;
-                wykres.Series[nrSerii].Points.AddXY(i, sumaEnergii); //w petli nanosimy sumę mocy wygenerowanej przez każdą z turbin
+                wykres.Series[nrSerii].Points.AddXY(i, sumaMocy); //w petli nanosimy sumę mocy wygenerowanej przez każdą z turbin
             }
         }
 
@@ -108,7 +108,7 @@ namespace lab1_v2
         }
         public void optymalnyWeibull(double[] wiatr)
         {
-            
+
 
 
             List<(decimal wynik, double c, double k)> wyniki = new List<(decimal, double, double)>(wiatr.Length); // dwie najbardziej podobne wykresy mają najmniejszą powierzchnię między sobą   
@@ -123,7 +123,7 @@ namespace lab1_v2
                     for (int i = 0; i < wiatr.Length; i++)
                     {
                         double Wb = Weibull(k, c, i);
-                        double wysokosc = tabHistogramWiatr[i] ;
+                        double wysokosc = tabHistogramWiatr[i];
                         double odleglosc = Wb - wysokosc;
 
                         bool skrzyzowane = ((poprzedniaOdleglosc < 0 && odleglosc > 0)  // Wykresy krzyżują się jeśli nastąpiła zmiana dodatniości różnicy między nimi
@@ -133,13 +133,14 @@ namespace lab1_v2
                         if (!skrzyzowane)
                         {
                             powierzchnia += (decimal)Math.Round(((Math.Abs(poprzedniaOdleglosc) + Math.Abs(odleglosc)) / 2 * wysokoscTrapezu), 10, MidpointRounding.AwayFromZero);
-                                                                // wartość bezwzględna
+                            // wartość bezwzględna
                         }
-                        else {
+                        else
+                        {
                             double wysokoscTrojkata1 = wysokoscTrapezu / Math.Abs(poprzedniaOdleglosc) * Math.Abs(odleglosc); // trójkąty pomiędzy przekątnymi a 
                             double wysokoscTrojkata2 = wysokoscTrapezu / Math.Abs(odleglosc) * Math.Abs(poprzedniaOdleglosc); // podstawami trapezu zawsze są podobne
-                            powierzchnia += (decimal)Math.Round((Math.Abs(poprzedniaOdleglosc) * wysokoscTrojkata1 / 2), 10, MidpointRounding.AwayFromZero); 
-                            powierzchnia += (decimal)Math.Round((Math.Abs(odleglosc) * wysokoscTrojkata2 / 2), 10, MidpointRounding.AwayFromZero); 
+                            powierzchnia += (decimal)Math.Round((Math.Abs(poprzedniaOdleglosc) * wysokoscTrojkata1 / 2), 10, MidpointRounding.AwayFromZero);
+                            powierzchnia += (decimal)Math.Round((Math.Abs(odleglosc) * wysokoscTrojkata2 / 2), 10, MidpointRounding.AwayFromZero);
                         }
                     }
                     wyniki.Add((powierzchnia, c, k));
@@ -206,7 +207,7 @@ namespace lab1_v2
                 double wspA = mocZn / (vPZn - vCutIn);
                 // moc = -wspA * vCutIn + wspA * predkoscWiatru;
                 // moc = wspA * (-1 * vCutIn) + wspA * predkoscWiatru;
-                moc = wspA * (predkoscWiatru - vCutIn); 
+                moc = wspA * (predkoscWiatru - vCutIn);
             }
 
             return moc;
