@@ -108,9 +108,6 @@ namespace lab1_v2
         }
         public void optymalnyWeibull(double[] wiatr)
         {
-
-
-
             List<(decimal wynik, double c, double k)> wyniki = new List<(decimal, double, double)>(wiatr.Length); // dwie najbardziej podobne wykresy mają najmniejszą powierzchnię między sobą   
             (decimal wynik, double c, double k) najlepszyWynik = (999999999, 0, 0);                               // w wynikach zapisujemy powierzchnię między wykresami oraz wartości c i k
             for (double c = 1.0; c < 10.0; c += .1)
