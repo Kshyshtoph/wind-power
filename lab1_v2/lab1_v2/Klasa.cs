@@ -136,8 +136,8 @@ namespace lab1_v2
                         }
                         else
                         {
-                            double wysokoscTrojkata1 = wysokoscTrapezu / Math.Abs(poprzedniaOdleglosc) * Math.Abs(odleglosc); // trójkąty pomiędzy przekątnymi a 
-                            double wysokoscTrojkata2 = wysokoscTrapezu / Math.Abs(odleglosc) * Math.Abs(poprzedniaOdleglosc); // podstawami trapezu zawsze są podobne
+                            double wysokoscTrojkata1 = wysokoscTrapezu * Math.Abs(poprzedniaOdleglosc) / Math.Abs(odleglosc); // trójkąty pomiędzy przekątnymi a 
+                            double wysokoscTrojkata2 = wysokoscTrapezu * Math.Abs(odleglosc) / Math.Abs(poprzedniaOdleglosc); // podstawami trapezu zawsze są podobne
                             powierzchnia += (decimal)Math.Round((Math.Abs(poprzedniaOdleglosc) * wysokoscTrojkata1 / 2), 10, MidpointRounding.AwayFromZero);
                             powierzchnia += (decimal)Math.Round((Math.Abs(odleglosc) * wysokoscTrojkata2 / 2), 10, MidpointRounding.AwayFromZero);
                         }
