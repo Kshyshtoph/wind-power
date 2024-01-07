@@ -91,12 +91,10 @@ namespace lab1_v2
         }
         public void rysujPorownanie(Chart wykres)
         {
-            List<double> wyniki = new List<double>();
             for (int i = 0; i < tabDaneTurbiny.GetLength(0); i++)
             {
                 Turbina t = new Turbina(" ", i);
                 double sumaMocy = t.SumaEnergii(tabHistogramWiatr, tabKrzywaMocy);
-                wyniki.Add(sumaMocy);
                 int nrSerii = i + 6;
                 wykres.Series[nrSerii].Points.AddXY(i, sumaMocy); //w petli nanosimy sumę mocy wygenerowanej przez każdą z turbin
             }
@@ -125,9 +123,11 @@ namespace lab1_v2
                         bool skrzyzowane = ((poprzedniaOdleglosc < 0 && odleglosc > 0)  // Wykresy krzyżują się jeśli nastąpiła zmiana dodatniości różnicy między nimi
                                         || (poprzedniaOdleglosc > 0 && odleglosc < 0)); // Jeżeli wykresy nie są skrzyżowane powierzchnię między nimi tworzy trapez. 
                                                                                         // W innym wypadku powierzchnię tworzą 2 trójkąty leżące pomiędzy jego przekątnymi a podstawami.
+                        
+                        double odlBW = Math.Abs(odleglosc), poprzedniaOdlBW = Math.Abs(poprzedniaOdleglosc);
+
                         poprzedniaOdleglosc = odleglosc;
 
-                        double odlBW = Math.Abs(odleglosc), poprzedniaOdlBW = Math.Abs(poprzedniaOdleglosc);
                         // wartości bezwzględne odległości
                         double hTrapez = 1; // stały krok między wartościami
                         if (!skrzyzowane)
