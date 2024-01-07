@@ -137,18 +137,10 @@ namespace lab1_v2
                         else
                         {
                             double wysokoscTrojkata1, wysokoscTrojkata2;
-                            if(Math.Abs(poprzedniaOdleglosc) >= Math.Abs(odleglosc))
-                            {
-                                wysokoscTrojkata1 = wysokoscTrapezu * Math.Abs(odleglosc) / Math.Abs(poprzedniaOdleglosc);
-                                wysokoscTrojkata2 = wysokoscTrapezu - wysokoscTrojkata1;
-                            }
-                            else
-                            {
-                                wysokoscTrojkata2 = wysokoscTrapezu * Math.Abs(poprzedniaOdleglosc) / Math.Abs(odleglosc);
-                                wysokoscTrojkata1 = wysokoscTrapezu - wysokoscTrojkata2;
-                            }
-                            powierzchnia += (decimal)Math.Round((Math.Abs(poprzedniaOdleglosc) * wysokoscTrojkata1 / 2), 10, MidpointRounding.AwayFromZero);
-                            powierzchnia += (decimal)Math.Round((Math.Abs(odleglosc) * wysokoscTrojkata2 / 2), 10, MidpointRounding.AwayFromZero);
+                            wysokoscTrojkata1 = wysokoscTrapezu * odleglosc / (odleglosc + poprzedniaOdleglosc);
+                            wysokoscTrojkata2 = wysokoscTrapezu  * poprzedniaOdleglosc / (odleglosc + poprzedniaOdleglosc);
+                            powierzchnia += (decimal)Math.Round((Math.Abs(odleglosc) * wysokoscTrojkata1 / 2), 10, MidpointRounding.AwayFromZero);
+                            powierzchnia += (decimal)Math.Round((Math.Abs(poprzedniaOdleglosc) * wysokoscTrojkata2 / 2), 10, MidpointRounding.AwayFromZero);
                         }
                     }
                     wyniki.Add((powierzchnia, c, k));
