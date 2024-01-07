@@ -123,11 +123,12 @@ namespace lab1_v2
                         double wysokosc = tabHistogramWiatr[i];
                         double odleglosc = Wb - wysokosc;
 
-                        poprzedniaOdleglosc = odleglosc;
 
                         bool skrzyzowane = ((poprzedniaOdleglosc < 0 && odleglosc > 0)  // Wykresy krzyżują się jeśli nastąpiła zmiana dodatniości różnicy między nimi
                                         || (poprzedniaOdleglosc > 0 && odleglosc < 0)); // Jeżeli wykresy nie są skrzyżowane powierzchnię między nimi tworzy trapez. 
                                                                                         // W innym wypadku powierzchnię tworzą 2 trójkąty leżące pomiędzy jego przekątnymi a podstawami.
+                        poprzedniaOdleglosc = odleglosc;
+
                         double odlBW = Math.Abs(odleglosc), poprzedniaOdlBW = Math.Abs(poprzedniaOdleglosc);
                         // wartości bezwzględne odległości
                         double hTrapez = 1; // stały krok między wartościami
