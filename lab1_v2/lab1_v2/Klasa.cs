@@ -128,19 +128,20 @@ namespace lab1_v2
                         bool skrzyzowane = ((poprzedniaOdleglosc < 0 && odleglosc > 0)  // Wykresy krzyżują się jeśli nastąpiła zmiana dodatniości różnicy między nimi
                                         || (poprzedniaOdleglosc > 0 && odleglosc < 0)); // Jeżeli wykresy nie są skrzyżowane powierzchnię między nimi tworzy trapez. 
                                                                                         // W innym wypadku powierzchnię tworzą 2 trójkąty leżące pomiędzy jego przekątnymi a podstawami.
-                        double wysokoscTrapezu = 1;
+                        double odlBW = Math.Abs(odleglosc), poprzedniaOdlBW = Math.Abs(poprzedniaOdleglosc);
+                        // wartości bezwzględne odległości
+                        double hTrapez = 1; // stały krok między wartościami
                         if (!skrzyzowane)
                         {
-                            powierzchnia += (decimal)Math.Round(((Math.Abs(poprzedniaOdleglosc) + Math.Abs(odleglosc)) / 2 * wysokoscTrapezu), 10, MidpointRounding.AwayFromZero);
-                            // wartość bezwzględna
+                            powierzchnia += (decimal)Math.Round((poprzedniaOdlBW + odlBW / 2 * hTrapez), 10, MidpointRounding.AwayFromZero);
                         }
                         else
                         {
-                            double wysokoscTrojkata1, wysokoscTrojkata2;
-                            wysokoscTrojkata1 = wysokoscTrapezu * odleglosc / (odleglosc + poprzedniaOdleglosc);
-                            wysokoscTrojkata2 = wysokoscTrapezu  * poprzedniaOdleglosc / (odleglosc + poprzedniaOdleglosc);
-                            powierzchnia += (decimal)Math.Round((Math.Abs(odleglosc) * wysokoscTrojkata1 / 2), 10, MidpointRounding.AwayFromZero);
-                            powierzchnia += (decimal)Math.Round((Math.Abs(poprzedniaOdleglosc) * wysokoscTrojkata2 / 2), 10, MidpointRounding.AwayFromZero);
+                            double hT1, hT2; // wysokości trójkątów
+                            hT1 = hTrapez * odlBW / (odlBW + poprzedniaOdlBW);
+                            hT2 = hTrapez  * poprzedniaOdlBW / (odlBW + poprzedniaOdlBW);
+                            powierzchnia += (decimal)Math.Round((odlBW * hT1 / 2), 10, MidpointRounding.AwayFromZero);
+                            powierzchnia += (decimal)Math.Round((poprzedniaOdlBW * hT2 / 2), 10, MidpointRounding.AwayFromZero);
                         }
                     }
                     wyniki.Add((powierzchnia, c, k));
