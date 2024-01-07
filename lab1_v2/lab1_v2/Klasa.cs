@@ -122,8 +122,6 @@ namespace lab1_v2
                         double Wb = Weibull(k, c, i);
                         double wysokosc = tabHistogramWiatr[i];
                         double odleglosc = Wb - wysokosc;
-
-
                         bool skrzyzowane = ((poprzedniaOdleglosc < 0 && odleglosc > 0)  // Wykresy krzyżują się jeśli nastąpiła zmiana dodatniości różnicy między nimi
                                         || (poprzedniaOdleglosc > 0 && odleglosc < 0)); // Jeżeli wykresy nie są skrzyżowane powierzchnię między nimi tworzy trapez. 
                                                                                         // W innym wypadku powierzchnię tworzą 2 trójkąty leżące pomiędzy jego przekątnymi a podstawami.
@@ -139,7 +137,20 @@ namespace lab1_v2
                         else
                         {
                             double hT1, hT2; // wysokości trójkątów
-                            hT1 = hTrapez * odlBW / (odlBW + poprzedniaOdlBW);
+                            hT1 = hTrapez * odlBW / (odlBW + poprzedniaOdlBW); // podobieństwo trójkątów 
+                                                                               // pomiędzy podstawami a przekątnymi trapezu
+                                                                               // (kkk)
+
+                            // hTrapez = hT1 + hT2
+
+                            //    hT1                  odlBW              
+                            //------------ = ---------------------------- 
+                            //  hTrapez       poprzedniaOdlBW + odlBW     
+
+                            //                            odlBW
+                            // hT1 = hTrapez * ---------------------------
+                            //                  poprzedniaOdlBW + odlBW
+
                             hT2 = hTrapez  * poprzedniaOdlBW / (odlBW + poprzedniaOdlBW);
                             powierzchnia += (decimal)Math.Round((odlBW * hT1 / 2), 10, MidpointRounding.AwayFromZero);
                             powierzchnia += (decimal)Math.Round((poprzedniaOdlBW * hT2 / 2), 10, MidpointRounding.AwayFromZero);
