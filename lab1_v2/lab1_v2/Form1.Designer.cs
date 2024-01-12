@@ -150,17 +150,17 @@ namespace lab1_v2
             series7.ChartArea = "ChartArea4";
             series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
             series7.Legend = "Legend1";
-            series7.Name = "Moc wygenerowana - turbina 1";
+            series7.Name = "Energia wygenerowana - turbina 1";
 
             series8.ChartArea = "ChartArea4";
             series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
             series8.Legend = "Legend1";
-            series8.Name = "Moc wygenerowana - turbina 2";
+            series8.Name = "Energia wygenerowana - turbina 2";
 
             series9.ChartArea = "ChartArea4";
             series9.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
             series9.Legend = "Legend1";
-            series9.Name = "Moc wygenerowana - turbina 3";
+            series9.Name = "Energia wygenerowana - turbina 3";
 
             this.chart1.Series.Add(series1);
             this.chart1.Series.Add(series2);
@@ -210,7 +210,7 @@ namespace lab1_v2
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(13, 55);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(186, 177);
+            this.groupBox1.Size = new System.Drawing.Size(186, 217);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Rozkład Weibulla";
@@ -239,9 +239,9 @@ namespace lab1_v2
             ///
             this.buttonPorownanie.Location = new System.Drawing.Point(9, 153);
             this.buttonPorownanie.Name = "buttonPorownanie";
-            this.buttonPorownanie.Size = new System.Drawing.Size(170, 25);
+            this.buttonPorownanie.Size = new System.Drawing.Size(170, 45);
             this.buttonPorownanie.TabIndex = 4;
-            this.buttonPorownanie.Text = "Porównaj wygenerowaną moc";
+            this.buttonPorownanie.Text = "Porównaj wygenerowaną \n energię";
             this.buttonPorownanie.UseVisualStyleBackColor = true;
             this.buttonPorownanie.Click += new System.EventHandler(this.porownanieMocyClick);
             // 
@@ -329,14 +329,14 @@ namespace lab1_v2
             "E-44",
             "E-101",
             "E-33"});
-            this.comboBox2.Location = new System.Drawing.Point(45, 245);
+            this.comboBox2.Location = new System.Drawing.Point(45, 285);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(129, 21);
             this.comboBox2.TabIndex = 4;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(45, 272);
+            this.button2.Location = new System.Drawing.Point(45, 312);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(129, 23);
             this.button2.TabIndex = 5;
@@ -346,7 +346,7 @@ namespace lab1_v2
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(45, 301);
+            this.button3.Location = new System.Drawing.Point(45, 341);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(129, 23);
             this.button3.TabIndex = 6;
@@ -356,7 +356,7 @@ namespace lab1_v2
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(45, 330);
+            this.button4.Location = new System.Drawing.Point(45, 370);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(129, 23);
             this.button4.TabIndex = 7;

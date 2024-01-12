@@ -39,6 +39,8 @@ namespace lab1_v2
             if (i == 3 || i == 5 || i == 8 || i == 10) liczbadni = 30;
             if (i == 0 || i == 2 || i == 4 || i == 6 || i == 7 || i == 9 || i == 11) liczbadni = 31;
             if (comboBox1.SelectedIndex == 12) liczbadni = 365;
+            symulator.rysujHistogram(chart1, symulator.tabHistogramWiatr, 0);
+
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -56,7 +58,7 @@ namespace lab1_v2
         }
         private void porownanieMocyClick(object sender, EventArgs e)
         {
-            symulator.rysujPorownanie(chart1); 
+            symulator.rysujPorownanie(chart1, liczbadni); 
         }
 
         private void NUD_wspK_ValueChanged(object sender, EventArgs e)

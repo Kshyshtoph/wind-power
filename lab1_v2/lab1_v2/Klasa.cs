@@ -42,20 +42,28 @@ namespace lab1_v2
 
         public void otworzPlikWiatr(int liczbaDni)//tworzymy funkcje ktora pozwoli na otwrcie pliku z predkosciami wiatru
         {
+            double suma = 0;//zmienna pomocnicza
             string nazwaPliku = "";
-
             OpenFileDialog openFile = new OpenFileDialog();//funkcja wbudowana służąca do otwarcia pliku z danymi predkosci wiatru
             if (openFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)//jesli plik istnieje i uda sie go otworzyc to wchodzimy w if-a
             {
-                nazwaPliku = openFile.FileName; //niewazne jaka nazwa pliku  teraz bedzie sie on nazwyał "nazwaPliku" - tak naprawdę to nie - w zmiennej nazwaPliku zapisujemy faktyczną nazwę pliku
-                JObject o1 = JObject.Parse(File.ReadAllText(nazwaPliku));
-                JArray srednie = (JArray)o1["WindSpeed"]["averages"];
-                Array.Resize(ref tabWiatr, srednie.Count); //ewentualne zmniejszenie tablicy wiatr do wilkość licznik, aby na koncu nie było 0000000
-
-                for (int i = 0; i < srednie.Count; i++)
+                nazwaPliku = openFile.FileName; //niewazne jaka nazwa pliku  teraz bedzie sie on nazwyał "nazwaPliku"
+                StreamReader plik = new StreamReader(nazwaPliku);//korzystajac z fucbnki wbudowanej czytamy znaki
+                int licznik = 0;
+                while (!plik.EndOfStream)//powtarzamy petle tak długo az odczytamy wszystkie znaki
                 {
-                    tabWiatr[i] = (double)srednie[i][1];
+                    if (tabWiatr.Length <= licznik) Array.Resize(ref tabWiatr, tabWiatr.Length + 1);
+                    //ziwekszamy tablice tak długo jak są jeszcze pomiary w pliku
+                    tabWiatr[licznik] = Convert.ToDouble(plik.ReadLine());//odczytane znaki konwertuejmy i zapisujemy do tablicy
+                    suma += tabWiatr[licznik];//wszytkie wartosci predkosci wiatru dodajemy do siebie , zeby pozniej wyznaczyc średni Vw
+                    licznik++;
                 }
+                predSrednia = suma / licznik;//wyznacznie predkosci sredniej wiatru
+                Array.Resize(ref tabWiatr, licznik); //ewentualne zmniejszenie tablicy wiatr do wilkość licznik, aby na koncu nie było 0000000
+                krokWiatr = (double)(365 * 24) / licznik;//wyzbnacznire sredniego kroku predkosci wiatru
+                liczbaProbekDzienWiatr = (int)(licznik / liczbaDni);//liczba probek jak została wygenerowana w coiagu dnia
+                plik.Close();//zaykamy plik na ktorym pracowalismy
+
             }
             utworzHistogramWiatr();
         }
@@ -89,14 +97,14 @@ namespace lab1_v2
                 wykres.Series[nrSerii].Points.AddXY(i, tab[i]);//w petli nanosimy poszczegolne prawdopodobienastwa wystapienia  poszczegolnych predkosci
             }
         }
-        public void rysujPorownanie(Chart wykres)
+        public void rysujPorownanie(Chart wykres, int iloscDni)
         {
             for (int i = 0; i < tabDaneTurbiny.GetLength(0); i++)
             {
                 Turbina t = new Turbina(" ", i);
-                double sumaMocy = t.SumaEnergii(tabHistogramWiatr, tabKrzywaMocy);
+                double sumaEnergii = t.SumaEnergii(tabHistogramWiatr, tabKrzywaMocy, iloscDni);
                 int nrSerii = i + 6;
-                wykres.Series[nrSerii].Points.AddXY(i, sumaMocy); //w petli nanosimy sumę mocy wygenerowanej przez każdą z turbin
+                wykres.Series[nrSerii].Points.AddXY(i, sumaEnergii); //w petli nanosimy sumę mocy wygenerowanej przez każdą z turbin
             }
         }
 
@@ -123,7 +131,7 @@ namespace lab1_v2
                         bool skrzyzowane = ((poprzedniaOdleglosc < 0 && odleglosc > 0)  // Wykresy krzyżują się jeśli nastąpiła zmiana dodatniości różnicy między nimi
                                         || (poprzedniaOdleglosc > 0 && odleglosc < 0)); // Jeżeli wykresy nie są skrzyżowane powierzchnię między nimi tworzy trapez. 
                                                                                         // W innym wypadku powierzchnię tworzą 2 trójkąty leżące pomiędzy jego przekątnymi a podstawami.
-                        
+
                         double odlBW = Math.Abs(odleglosc), poprzedniaOdlBW = Math.Abs(poprzedniaOdleglosc);
 
                         poprzedniaOdleglosc = odleglosc;
@@ -151,7 +159,7 @@ namespace lab1_v2
                             // hT1 = hTrapez * ---------------------------
                             //                  poprzedniaOdlBW + odlBW
 
-                            hT2 = hTrapez  * poprzedniaOdlBW / (odlBW + poprzedniaOdlBW);
+                            hT2 = hTrapez * poprzedniaOdlBW / (odlBW + poprzedniaOdlBW);
                             powierzchnia += (decimal)Math.Round((odlBW * hT1 / 2), 10, MidpointRounding.AwayFromZero);
                             powierzchnia += (decimal)Math.Round((poprzedniaOdlBW * hT2 / 2), 10, MidpointRounding.AwayFromZero);
                         }
@@ -166,7 +174,7 @@ namespace lab1_v2
                     najlepszyWynik = w;
             }
 
-            MessageBox.Show("Proponowane wartości zmiennych: k=" + najlepszyWynik.k.ToString() + " c=" + najlepszyWynik.c.ToString());
+            MessageBox.Show("Proponowane wartości zmiennych: k=" + Math.Round(najlepszyWynik.k, 1).ToString() + " c=" + Math.Round(najlepszyWynik.c, 1).ToString());
         }
 
         public void rysujWeibull(Chart wykres, double wspK, double wspC)
@@ -306,13 +314,14 @@ namespace lab1_v2
                 wykres.Series[5].Points.AddXY(i, tabGestoscMocy[i]);
             }
         }
-
-        internal double SumaEnergii(double[] tabHis, double[,] tabKrzywa)
+        internal double SumaEnergii(double[] tabHis, double[,] tabKrzywa ,int iloscDni)
         {
             double suma = 0;
             for (int i = 0; i < tabHis.Length; i++)
             {
-                suma += tabHis[i] * mocTurbinySrednia(i, tabKrzywa);
+                suma += tabHis[i] // ułamek miesiąca
+                    * mocTurbinySrednia(i, tabKrzywa) //megawatogodziny na rok 
+                    / 365 * iloscDni; // megawatogodziny na miesiąc
             }
             return suma;
         }
